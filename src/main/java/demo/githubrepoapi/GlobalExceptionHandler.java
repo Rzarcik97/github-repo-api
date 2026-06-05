@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
-    ResponseEntity<ApiErrorResponse> handleUserNotFound(UserNotFoundException ex) {
+    public ResponseEntity<ApiErrorResponse> handleUserNotFound(UserNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ApiErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
+                .body(new ApiErrorResponse(
+                        404,
+                        ex.getMessage()
+                ));
     }
 }

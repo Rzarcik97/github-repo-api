@@ -2,10 +2,19 @@
 
 A Spring Boot application that exposes a simplified endpoint for listing GitHub user repositories.
 
-## Requirements
-
+## Technologies
 - Java 25
-- Gradle
+- Spring Boot 4
+- Gradle Kotlin DSL
+- JUnit 5
+- WireMock
+
+## Features
+- Fetch GitHub user repositories
+- Exclude forked repositories
+- Return branches with last commit SHA
+- Handle non-existing GitHub users with 404 response
+
 ## Configuration
 
 The application can be configured with the following environment variables:
@@ -13,7 +22,6 @@ The application can be configured with the following environment variables:
 | Variable                | Description                                                                       | Default  |
 |-------------------------|-----------------------------------------------------------------------------------|----------|
 | `GITHUB_TOKEN`          | GitHub personal access token (increases rate limit from 60 to 5000 requests/hour) | _(none)_ |
-| `GITHUB_REPOS_PER_PAGE` | Number of repositories fetched per request (max 100)                              | `30`     |
 
 ## Running the application
 
@@ -66,8 +74,6 @@ Returns all public repositories for the given GitHub username that are not forks
   "message": "GitHub user 'nonexistent' not found"
 }
 ```
-
-> **Note:** Due to GitHub API pagination, the number of returned repositories is limited by `GITHUB_REPOS_PER_PAGE` (default 30).
 
 ## Architecture
 

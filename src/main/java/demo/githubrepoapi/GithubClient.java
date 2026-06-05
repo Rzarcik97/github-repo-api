@@ -13,9 +13,6 @@ public class GithubClient {
 
     private final RestClient restClient;
 
-    @Value("${github.api.repos-per-page}")
-    private int reposPerPage;
-
     GithubClient(@Value("${github.api.base-url}") String baseUrl,
                  @Value("${github.api.token:}") String token) {
 
@@ -36,22 +33,28 @@ public class GithubClient {
             return restClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/users/{username}/repos")
-                            .queryParam("per_page", reposPerPage)
                             .build(username))
                     .retrieve()
                     .body(new ParameterizedTypeReference<>() {});
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new UserNotFoundException(username);
+                throw new UserNotFoundException("User " + username + " not found");
             }
             throw e;
         }
     }
 
     List<GithubBranchDto> fetchBranches(String username, String repoName) {
-        return restClient.get()
-                .uri("/repos/{username}/{repoName}/branches", username, repoName)
-                .retrieve()
-                .body(new ParameterizedTypeReference<>() {});
+        try {
+            return restClient.get()
+                    .uri("/repos/{username}/{repoName}/branches", username, repoName)
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<>() {});
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new UserNotFoundException("User " + username + " not found");
+            }
+            throw e;
+        }
     }
 }
