@@ -108,7 +108,7 @@ class GithubRepoApiApplicationTests {
                         .withStatus(404)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-                                { "message": "Not Found" }
+                                { "message": "GitHub user not found" }
                                 """)));
 
         ApiErrorResponse error = restTestClient.get()
